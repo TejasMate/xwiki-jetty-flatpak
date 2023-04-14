@@ -1,0 +1,37 @@
+id: com.xwiki.eg
+runtime: org.freedesktop.Platform
+runtime-version: "22.08"
+sdk: org.freedesktop.Sdk
+command: /app/bin/run.sh
+finish-args:
+  - --filesystem=host
+  - --filesystem=/usr
+  - --filesystem=/etc
+  - --share=network
+  - --share=ipc
+  - --socket=x11
+  - --device=dri
+  - --socket=wayland
+modules:
+  - name: xwiki
+    buildsystem: simple
+    sources:
+      - type: file
+        path: xwiki.zip
+        sha256: 5d3137835b8454069ef5498c0f06f3b492015945258061bbd746ae77577eada7
+      - type: file
+        path: org.xwiki.eg.png
+      - type: file
+        path: org.xwiki.eg.metainfo.xml
+      - type: file
+        path: org.xwiki.eg.desktop
+      - type: script
+        dest-filename: run.sh
+        commands:
+          - /app/xwiki-platform-distribution-jetty-hsqldb-15.2/start_xwiki.sh
+    build-commands:
+      - unzip -q xwiki.zip -d /app
+      - chmod +x /app/xwiki-platform-distribution-jetty-hsqldb-15.2/start_xwiki.sh
+      - install -Dm644 run.sh /app/bin/run.sh
+      - install -Dm644 org.xwiki.eg.metainfo.xml /app/share/metainfo/org.xwiki.eg.metainfo.xml
+      - install -Dm644 org.xwiki.eg.desktop /app/share/applications/org.xwiki.eg.desktop
