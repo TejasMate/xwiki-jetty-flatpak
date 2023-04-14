@@ -17,7 +17,7 @@ modules:
     buildsystem: simple
     sources:
       - type: file
-        path: xwiki.zip
+        url: https://github.com/TejasMate/xwiki-jetty-flatpak/releases/download/15.2/xwiki-platform-distribution-jetty-hsqldb-15.2.zip
         sha256: 5d3137835b8454069ef5498c0f06f3b492015945258061bbd746ae77577eada7
       - type: file
         path: org.xwiki.eg.png
@@ -30,7 +30,7 @@ modules:
         commands:
           - /app/xwiki-platform-distribution-jetty-hsqldb-15.2/start_xwiki.sh
     build-commands:
-      - unzip -q xwiki.zip -d /app
+      - unzip -q xwiki-platform-distribution-jetty-hsqldb-15.2.zip -d /app
       - chmod +x /app/xwiki-platform-distribution-jetty-hsqldb-15.2/start_xwiki.sh
       - install -Dm644 run.sh /app/bin/run.sh
       - install -Dm644 org.xwiki.eg.metainfo.xml /app/share/metainfo/org.xwiki.eg.metainfo.xml
