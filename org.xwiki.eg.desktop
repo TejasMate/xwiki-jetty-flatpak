@@ -3,4 +3,4 @@ Name=XWiki
 Exec=/app/bin/run.sh %f
 Type=Application
 Icon=org.xwiki.eg
-Categories=Application;Graphics;
+Categories=Office;

@@ -1,18 +1,27 @@
-id: com.xwiki.eg
-runtime: org.freedesktop.Platform
-runtime-version: "22.08"
-sdk: org.freedesktop.Sdk
+id: org.xwiki.eg
+runtime: org.gnome.Platform
+runtime-version: "44"
+sdk: org.gnome.Sdk
+sdk-extensions:
+  - org.freedesktop.Sdk.Extension.openjdk11
 command: /app/bin/run.sh
 finish-args:
   - --filesystem=host
-  - --filesystem=/usr
-  - --filesystem=/etc
   - --share=network
   - --share=ipc
   - --socket=x11
-  - --device=dri
   - --socket=wayland
+  - --device=dri
+  - --env=PATH=/app/jre/bin:/usr/bin:/app/bin
+  - --env=JAVA_HOME=/app/jre
+  - --talk-name=org.gtk.vfs.*
+  #- --/var/lib/flatpak/runtime/org.freedesktop.Sdk.Extension.openjdk11/x86_64/22.08/active/files/jvm/openjdk-11/lib/security
 modules:
+  - name: openjdk
+    buildsystem: simple
+    build-commands:
+      - /usr/lib/sdk/openjdk11/install.sh
+      - /usr/lib/sdk/openjdk11/enable.sh
   - name: xwiki
     buildsystem: simple
     sources:
@@ -22,16 +31,24 @@ modules:
       - type: file
         path: org.xwiki.eg.png
       - type: file
-        path: org.xwiki.eg.metainfo.xml
+        path: org.xwiki.eg.appdata.xml
       - type: file
         path: org.xwiki.eg.desktop
       - type: script
         dest-filename: run.sh
         commands:
-          - /app/xwiki-platform-distribution-jetty-hsqldb-15.2/start_xwiki.sh
+          - /app/xwiki-platform-distribution-jetty-hsqldb-15.2/start_xwiki_debug.sh
     build-commands:
+      - mkdir -p /app/bin /app/share/metainfo /app/share/appdata /app/share/applications /app/share/icons/hicolor/128x128/apps/
       - unzip -q xwiki-platform-distribution-jetty-hsqldb-15.2.zip -d /app
-      - chmod +x /app/xwiki-platform-distribution-jetty-hsqldb-15.2/start_xwiki.sh
-      - install -Dm644 run.sh /app/bin/run.sh
-      - install -Dm644 org.xwiki.eg.metainfo.xml /app/share/metainfo/org.xwiki.eg.metainfo.xml
-      - install -Dm644 org.xwiki.eg.desktop /app/share/applications/org.xwiki.eg.desktop
+      - install -Dm644 run.sh /app/bin/
+      - install -Dm644 org.xwiki.eg.appdata.xml /app/share/appdata/
+      - install -Dm644 org.xwiki.eg.desktop /app/share/applications/
+      - install -Dm644 org.xwiki.eg.png /app/share/icons/hicolor/128x128/apps/
+      - chmod +x /app/bin/run.sh
+      - chmod +x /app/jre/bin
+      - chmod +x /app/bin
+      - mkdir /app/xwiki-platform-distribution-jetty-hsqldb-15.2/logs
+      - mkdir /app/xwiki-platform-distribution-jetty-hsqldb-15.2/data
+      - chmod -R 777 /app/xwiki-platform-distribution-jetty-hsqldb-15.2
+      - stat /app/xwiki-platform-distribution-jetty-hsqldb-15.2/logs
